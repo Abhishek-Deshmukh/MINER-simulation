@@ -5,7 +5,7 @@ if(${CMAKE_VERSION} VERSION_LESS 3.12)
   cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
 set(CMAKE_CXX_STANDARD 14) # Works in recent cmakes
-project(B1_CRY_test)
+project(MINER_simulation)
 add_compile_options(-fdiagnostics-color=always)
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -67,24 +67,24 @@ target_link_libraries(main_lib root_lib geant_lib CRY)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(B1_CRY_test B1_CRY_test.cc)
-target_link_libraries(B1_CRY_test PUBLIC main_lib)
+add_executable(MINER_simulation MINER_simulation.cc)
+target_link_libraries(MINER_simulation PUBLIC main_lib)
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
 # build B1. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
-set(B1_CRY_test_SCRIPTS
-  B1_CRY_test.in
-  B1_CRY_test.out
+set(MINER_simulation_SCRIPTS
+  MINER_simulation.in
+  MINER_simulation.out
   init_vis.mac
   run1.mac
   run2.mac
   vis.mac
   )
 
-foreach(_script ${B1_CRY_test_SCRIPTS})
+foreach(_script ${MINER_simulation_SCRIPTS})
   configure_file(
     ${PROJECT_SOURCE_DIR}/${_script}
     ${PROJECT_BINARY_DIR}/${_script}
@@ -95,4 +95,4 @@ endforeach()
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS B1_CRY_test DESTINATION bin)
+install(TARGETS MINER_simulation DESTINATION bin)
