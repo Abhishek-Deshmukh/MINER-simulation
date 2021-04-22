@@ -62,7 +62,8 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
   //
   // World
   //
-  G4double world_sizeXY = 5 * m + 1 * mm; // the last 1 mm to avoid overlap issue
+  G4double world_sizeXY =
+      5 * m + 1 * mm; // the last 1 mm to avoid overlap issue
   G4double world_sizeZ = 5 * m;
   G4Material *world_mat = nist->FindOrBuildMaterial("G4_AIR");
 
@@ -109,11 +110,11 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
         auto gap_y = y_index * 0.0001 * mm;
         auto gap_z = z_index * 0.0001 * mm;
 
-
         auto name = "brick_" + std::to_string(x_index) + "_" +
                     std::to_string(y_index) + "_" + std::to_string(z_index);
 
-//        G4cout << G4endl << name << ": " << gap_x << ", " << gap_y << ", " << gap_z << G4endl;
+        //        G4cout << G4endl << name << ": " << gap_x << ", " << gap_y <<
+        //        ", " << gap_z << G4endl;
 
         auto *brick_log = new G4LogicalVolume(brickY, brick_mat, name);
         new G4PVPlacement(
@@ -126,48 +127,78 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
 
   // filling up the odd index layers
 
-  for (G4double x = -14; x <=14; x+=28) {
-    for(G4double y = -12; y<=12; y+=8 ) {
-      for (G4double z=3; z<=34; z+=4) {
-        G4int x_index = (x + 14)/ 28;
-        G4int y_index = (y+12) / 8;
-        G4int z_index = (z-1)/2;
+  for (G4double x = -14; x <= 14; x += 28) {
+    for (G4double y = -12; y <= 12; y += 8) {
+      for (G4double z = 3; z <= 34; z += 2) {
+        G4int x_index = (x + 14) / 28;
+        G4int y_index = (y + 12) / 8;
+        G4int z_index = (z - 1) / 2;
 
         auto gap_x = x_index * 0.0001 * mm;
         auto gap_y = y_index * 0.0001 * mm;
         auto gap_z = z_index * 0.0001 * mm;
 
-        auto name = "brickY_" + std::to_string(x_index) + "_" +
-                    std::to_string(y_index) + "_" + std::to_string(z_index);
+        G4double x_pos;
+        G4double y_pos;
+        G4Box *brick;
+        std::basic_string<char, std::char_traits<char>, std::allocator<char>>
+            name;
+        if (z_index % 2 == 1) {
+          x_pos = x * inch + gap_x;
+          y_pos = y * inch + gap_y;
+          brick = brickY;
+          name = "brickY_" + std::to_string(x_index) + "_" +
+                 std::to_string(y_index) + "_" + std::to_string(z_index);
+        } else {
+          y_pos = x * inch + gap_x;
+          x_pos = y * inch + gap_y;
+          brick = brickX;
+          name = "brickX_" + std::to_string(x_index) + "_" +
+                 std::to_string(y_index) + "_" + std::to_string(z_index);
+        }
 
-        auto *brick_log = new G4LogicalVolume(brickY, brick_mat, name);
-        new G4PVPlacement(
-            nullptr,
-            G4ThreeVector(x * inch + gap_x, y * inch + gap_y, z * inch + gap_z),
-            brick_log, name, logicWorld, false, 0, checkOverlaps);
+        auto *brick_log = new G4LogicalVolume(brick, brick_mat, name);
+        new G4PVPlacement(nullptr,
+                          G4ThreeVector(x_pos, y_pos, z * inch + gap_z),
+                          brick_log, name, logicWorld, false, 0, checkOverlaps);
       }
     }
   }
 
-  for (G4double x = -8; x <=8; x+=8) {
-    for(G4double y = -14; y<=14; y+=28 ) {
-      for (G4double z=3; z<=34; z+=4) {
-        G4int x_index = (x + 8)/ 8;
-        G4int y_index = (y+14) / 28;
-        G4int z_index = (z-1)/2;
+  for (G4double x = -8; x <= 8; x += 8) {
+    for (G4double y = -14; y <= 14; y += 28) {
+      for (G4double z = 3; z <= 34; z += 2) {
+        G4int x_index = (x + 8) / 8;
+        G4int y_index = (y + 14) / 28;
+        G4int z_index = (z - 1) / 2;
 
         auto gap_x = x_index * 0.0001 * mm;
         auto gap_y = y_index * 0.0001 * mm;
         auto gap_z = z_index * 0.0001 * mm;
 
-        auto name = "brickX_" + std::to_string(x_index) + "_" +
-                    std::to_string(y_index) + "_" + std::to_string(z_index);
+        G4double x_pos;
+        G4double y_pos;
+        G4Box *brick;
+        std::basic_string<char, std::char_traits<char>, std::allocator<char>>
+            name;
+        if (z_index % 2 == 1) {
+          x_pos = x * inch + gap_x;
+          y_pos = y * inch + gap_y;
+          brick = brickX;
+          name = "brickX_" + std::to_string(x_index) + "_" +
+                 std::to_string(y_index) + "_" + std::to_string(z_index);
+        } else {
+          y_pos = x * inch + gap_x;
+          x_pos = y * inch + gap_y;
+          brick = brickY;
+          name = "brickY_" + std::to_string(x_index) + "_" +
+                 std::to_string(y_index) + "_" + std::to_string(z_index);
+        }
 
-        auto *brick_log = new G4LogicalVolume(brickX, brick_mat, name);
-        new G4PVPlacement(
-            nullptr,
-            G4ThreeVector(x * inch + gap_x, y * inch + gap_y, z * inch + gap_z),
-            brick_log, name, logicWorld, false, 0, checkOverlaps);
+        auto *brick_log = new G4LogicalVolume(brick, brick_mat, name);
+        new G4PVPlacement(nullptr,
+                          G4ThreeVector(x_pos, y_pos, z * inch + gap_z),
+                          brick_log, name, logicWorld, false, 0, checkOverlaps);
       }
     }
   }
