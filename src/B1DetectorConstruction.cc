@@ -52,14 +52,8 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
   // Get nist material manager
   G4NistManager *nist = G4NistManager::Instance();
 
-  // Standard Materials
-  G4NistManager *materials = G4NistManager::Instance();
-
-  // Envelope parameters
-  //
-  G4double env_sizeXY = 3 * m + 1 * mm; // the last 1 mm to avoid overlap issue
-  G4double env_sizeZ = 2 * m;
-  G4Material *env_mat = nist->FindOrBuildMaterial("G4_AIR");
+  // Extra units
+  G4double inch = 2.54 * cm;
 
   // Option to switch on/off checking of volumes overlaps
   //
@@ -68,8 +62,8 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
   //
   // World
   //
-  G4double world_sizeXY = env_sizeXY + 1 * m;
-  G4double world_sizeZ = env_sizeZ * 2 + 1 * m;
+  G4double world_sizeXY = 5 * m + 1 * mm; // the last 1 mm to avoid overlap issue
+  G4double world_sizeZ = 5 * m;
   G4Material *world_mat = nist->FindOrBuildMaterial("G4_AIR");
 
   auto *solidWorld = new G4Box("World", // its name
@@ -91,58 +85,97 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
                         checkOverlaps);         // overlaps checking
 
   //
-  // Envelope
+  // Defining Bricks (8 x 4 x 2 inch) (lead)
   //
-  auto *solidEnv = new G4Box("Envelope", // its name
-                             0.5 * env_sizeXY, 0.5 * env_sizeXY,
-                             0.5 * env_sizeZ); // its size
+  // bricks are in 2 orientations both with 2 inch side on along z-axis
 
-  auto *logicEnv = new G4LogicalVolume(solidEnv,    // its solid
-                                       env_mat,     // its material
-                                       "Envelope"); // its name
+  auto *brickX = new G4Box("BrickX", // the one that is long along X axis
+                           4 * inch, 2 * inch, 1 * inch);
+  auto *brickY = new G4Box("BrickY", // the one that is long along Y axis
+                           2 * inch, 4 * inch, 1 * inch);
+  auto brick_mat = nist->FindOrBuildMaterial("G4_Pb");
 
-  new G4PVPlacement(nullptr,                            // no rotation
-                    G4ThreeVector(0, 0, env_sizeZ / 2), // at (0,0,0)
-                    logicEnv,                           // its logical volume
-                    "Envelope",                         // its name
-                    logicWorld,                         // its mother  volume
-                    false,                              // no boolean operation
-                    0,                                  // copy number
-                    checkOverlaps);                     // overlaps checking
+  // Laying the lower 2 layers of the bricks
 
-  //
-  //  Detector
-  //
-  G4double detector_XY = 3 * m;
-  G4double thickness = 1.0 * mm;
-  G4Material *germanium = materials->FindOrBuildMaterial("G4_Ge");
+  for (G4double x = -14; x <= 14; x = x + 4) {
+    for (G4double y = -12; y <= 12; y = y + 8) {
+      for (G4double z = 1; z <= 3; z = z + 2) {
 
-  auto *detector = new G4Box("Detector",
-                             0.5 * detector_XY,
-                             0.5 * detector_XY,
-                             thickness);
+        G4int x_index = (x + 14) / 4;
+        G4int y_index = (y + 12) / 8;
+        G4int z_index = (z - 1) / 2;
 
-  auto *logicalDetector = new G4LogicalVolume(detector,
-                                              germanium,
-                                              "Detector");
-  // Setting detector color
-  G4Color purple(0.625, 0.125, 0.9375);
-  auto *detectorVisAttr = new G4VisAttributes(purple);
-  logicalDetector->SetVisAttributes(detectorVisAttr);
+        auto gap_x = x_index * 0.0001 * mm;
+        auto gap_y = y_index * 0.0001 * mm;
+        auto gap_z = z_index * 0.0001 * mm;
 
-  new G4PVPlacement(nullptr,
-                    G4ThreeVector(0, 0, 0.5 * m),
-                    logicalDetector,
-                    "Detector",
-                    logicWorld,
-                    false,
-                    0,
-                    checkOverlaps);
+
+        auto name = "brick_" + std::to_string(x_index) + "_" +
+                    std::to_string(y_index) + "_" + std::to_string(z_index);
+
+//        G4cout << G4endl << name << ": " << gap_x << ", " << gap_y << ", " << gap_z << G4endl;
+
+        auto *brick_log = new G4LogicalVolume(brickY, brick_mat, name);
+        new G4PVPlacement(
+            nullptr,
+            G4ThreeVector(x * inch + gap_x, y * inch + gap_y, z * inch + gap_z),
+            brick_log, name, logicWorld, false, 0, checkOverlaps);
+      }
+    }
+  }
+
+  // filling up the odd index layers
+
+  for (G4double x = -14; x <=14; x+=28) {
+    for(G4double y = -12; y<=12; y+=8 ) {
+      for (G4double z=3; z<=34; z+=4) {
+        G4int x_index = (x + 14)/ 28;
+        G4int y_index = (y+12) / 8;
+        G4int z_index = (z-1)/2;
+
+        auto gap_x = x_index * 0.0001 * mm;
+        auto gap_y = y_index * 0.0001 * mm;
+        auto gap_z = z_index * 0.0001 * mm;
+
+        auto name = "brickY_" + std::to_string(x_index) + "_" +
+                    std::to_string(y_index) + "_" + std::to_string(z_index);
+
+        auto *brick_log = new G4LogicalVolume(brickY, brick_mat, name);
+        new G4PVPlacement(
+            nullptr,
+            G4ThreeVector(x * inch + gap_x, y * inch + gap_y, z * inch + gap_z),
+            brick_log, name, logicWorld, false, 0, checkOverlaps);
+      }
+    }
+  }
+
+  for (G4double x = -8; x <=8; x+=8) {
+    for(G4double y = -14; y<=14; y+=28 ) {
+      for (G4double z=3; z<=34; z+=4) {
+        G4int x_index = (x + 8)/ 8;
+        G4int y_index = (y+14) / 28;
+        G4int z_index = (z-1)/2;
+
+        auto gap_x = x_index * 0.0001 * mm;
+        auto gap_y = y_index * 0.0001 * mm;
+        auto gap_z = z_index * 0.0001 * mm;
+
+        auto name = "brickX_" + std::to_string(x_index) + "_" +
+                    std::to_string(y_index) + "_" + std::to_string(z_index);
+
+        auto *brick_log = new G4LogicalVolume(brickX, brick_mat, name);
+        new G4PVPlacement(
+            nullptr,
+            G4ThreeVector(x * inch + gap_x, y * inch + gap_y, z * inch + gap_z),
+            brick_log, name, logicWorld, false, 0, checkOverlaps);
+      }
+    }
+  }
 
   //
   // Set detector as scoring volume
   //
-  fScoringVolume = logicalDetector;
+  //  fScoringVolume = brick_log;
 
   //
   // always return the physical World
