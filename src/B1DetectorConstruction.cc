@@ -113,9 +113,6 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
         auto name = "brick_" + std::to_string(x_index) + "_" +
                     std::to_string(y_index) + "_" + std::to_string(z_index);
 
-        //        G4cout << G4endl << name << ": " << gap_x << ", " << gap_y <<
-        //        ", " << gap_z << G4endl;
-
         auto *brick_log = new G4LogicalVolume(brickY, brick_mat, name);
         new G4PVPlacement(
             nullptr,
@@ -127,22 +124,26 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
 
   // filling up the odd index layers
 
+  // defining variables to be used
+  G4int x_index, y_index, z_index;
+  G4double x_pos, y_pos, gap_x, gap_y, gap_z;
+  G4Box *brick;
+  G4String name;
+  G4LogicalVolume *brick_log;
+
   for (G4double x = -14; x <= 14; x += 28) {
     for (G4double y = -12; y <= 12; y += 8) {
       for (G4double z = 3; z <= 34; z += 2) {
-        G4int x_index = (x + 14) / 28;
-        G4int y_index = (y + 12) / 8;
-        G4int z_index = (z - 1) / 2;
+        x_index = (x + 14) / 28;
+        y_index = (y + 12) / 8;
+        z_index = (z - 1) / 2;
 
-        auto gap_x = x_index * 0.0001 * mm;
-        auto gap_y = y_index * 0.0001 * mm;
-        auto gap_z = z_index * 0.0001 * mm;
+        // gap between to avoid intersection
+        gap_x = x_index * 0.0001 * mm;
+        gap_y = y_index * 0.0001 * mm;
+        gap_z = z_index * 0.0001 * mm;
 
-        G4double x_pos;
-        G4double y_pos;
-        G4Box *brick;
-        std::basic_string<char, std::char_traits<char>, std::allocator<char>>
-            name;
+        // selecting wall orientation
         if (z_index % 2 == 1) {
           x_pos = x * inch + gap_x;
           y_pos = y * inch + gap_y;
@@ -157,7 +158,7 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
                  std::to_string(y_index) + "_" + std::to_string(z_index);
         }
 
-        auto *brick_log = new G4LogicalVolume(brick, brick_mat, name);
+        brick_log = new G4LogicalVolume(brick, brick_mat, name);
         new G4PVPlacement(nullptr,
                           G4ThreeVector(x_pos, y_pos, z * inch + gap_z),
                           brick_log, name, logicWorld, false, 0, checkOverlaps);
@@ -168,19 +169,16 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
   for (G4double x = -8; x <= 8; x += 8) {
     for (G4double y = -14; y <= 14; y += 28) {
       for (G4double z = 3; z <= 34; z += 2) {
-        G4int x_index = (x + 8) / 8;
-        G4int y_index = (y + 14) / 28;
-        G4int z_index = (z - 1) / 2;
+        x_index = (x + 8) / 8;
+        y_index = (y + 14) / 28;
+        z_index = (z - 1) / 2;
 
-        auto gap_x = x_index * 0.0001 * mm;
-        auto gap_y = y_index * 0.0001 * mm;
-        auto gap_z = z_index * 0.0001 * mm;
+        // gap between to avoid intersection
+        gap_x = x_index * 0.0001 * mm;
+        gap_y = y_index * 0.0001 * mm;
+        gap_z = z_index * 0.0001 * mm;
 
-        G4double x_pos;
-        G4double y_pos;
-        G4Box *brick;
-        std::basic_string<char, std::char_traits<char>, std::allocator<char>>
-            name;
+        // selecting wall orientation
         if (z_index % 2 == 1) {
           x_pos = x * inch + gap_x;
           y_pos = y * inch + gap_y;
@@ -195,7 +193,8 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
                  std::to_string(y_index) + "_" + std::to_string(z_index);
         }
 
-        auto *brick_log = new G4LogicalVolume(brick, brick_mat, name);
+        // making and placing
+        brick_log = new G4LogicalVolume(brick, brick_mat, name);
         new G4PVPlacement(nullptr,
                           G4ThreeVector(x_pos, y_pos, z * inch + gap_z),
                           brick_log, name, logicWorld, false, 0, checkOverlaps);
