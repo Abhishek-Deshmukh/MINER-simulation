@@ -54,6 +54,7 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
 
   // Extra units
   G4double inch = 2.54 * cm;
+  G4double unitGap = 0.0001*mm; // 0.1 micrometer
 
   // Option to switch on/off checking of volumes overlaps
   //
@@ -62,8 +63,8 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
   //
   // World
   //
-  G4double worldSizeXY = 5 * m + 1 * mm; // the last 1 mm to avoid overlap issue
-  G4double worldSizeZ = 5 * m;
+  G4double worldSizeXY = 3 * m + 1 * mm; // the last 1 mm to avoid overlap issue
+  G4double worldSizeZ = 3 * m;
   G4Material *worldMat = nist->FindOrBuildMaterial("G4_AIR");
 
   auto *solidWorld = new G4Box("World", // its name
@@ -85,8 +86,10 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
                         checkOverlaps);         // overlaps checking
 
   //
-  // Defining Bricks (8 x 4 x 2 inch) (lead)
+  // Building the lead fridge
   //
+
+  // Defining bricks (8 x 4 x 2 inch)
   // bricks are in 2 orientations both with 2 inch side on along z-axis
 
   auto *brickX = new G4Box("BrickX", // the one that is long along X axis
@@ -105,12 +108,12 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
         G4int yIndex = (y + 12) / 8;
         G4int zIndex = (z - 1) / 2;
 
-        auto xGap = xIndex * 0.0001 * mm;
-        auto yGap = yIndex * 0.0001 * mm;
-        auto zGap = zIndex * 0.0001 * mm;
+        auto xGap = xIndex * unitGap;
+        auto yGap = yIndex * unitGap;
+        auto zGap = zIndex * unitGap + unitGap;
 
-        auto name = "brick_" + std::to_string(xIndex) + "_" +
-                    std::to_string(yIndex) + "_" + std::to_string(zIndex);
+        auto name = "brickY_" + std::to_string(zIndex) + "_" +
+                    std::to_string(yIndex) + "_" + std::to_string(xIndex);
 
         auto *brick_log = new G4LogicalVolume(brickY, brickMat, name);
         new G4PVPlacement(
@@ -121,7 +124,7 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
     }
   }
 
-  // filling up the odd index layers
+  // Filling up the other layers
 
   // defining variables to be used
   G4int xIndex, yIndex, zIndex;
@@ -132,15 +135,15 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
 
   for (G4int x = -14; x <= 14; x += 28) {
     for (G4int y = -12; y <= 12; y += 8) {
-      for (G4int z = 3; z <= 34; z += 2) {
-        xIndex = (x + 14) / 28;
+      for (G4int z = 5; z <= 34; z += 2) {
+        xIndex = (x + 14) / 4;
         yIndex = (y + 12) / 8;
-        zIndex = (z - 1) / 2;
+        zIndex = (z + 1) / 2;
 
         // gap between to avoid intersection
-        xGap = xIndex * 0.0001 * mm;
-        yGap = yIndex * 0.0001 * mm;
-        zGap = zIndex * 0.0001 * mm;
+        xGap = xIndex * unitGap;
+        yGap = yIndex * unitGap;
+        zGap = zIndex * unitGap + unitGap;
 
         // selecting wall orientation
         if (zIndex % 2 == 1) {
@@ -149,14 +152,14 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
           brick = brickY;
           brickName = "brickY";
         } else {
-          yPos = x * inch + xGap;
-          xPos = y * inch + yGap;
+          xPos = y * inch + xGap;
+          yPos = x * inch + yGap;
           brick = brickX;
           brickName = "brickX";
         }
 
-        name = brickName + "_" + std::to_string(xIndex) + "_" +
-               std::to_string(yIndex) + "_" + std::to_string(zIndex);
+        name = brickName + "_" + std::to_string(zIndex) + "_" +
+               std::to_string(yIndex) + "_" + std::to_string(xIndex);
 
         // making and placing
         brickLog = new G4LogicalVolume(brick, brickMat, name);
@@ -168,15 +171,15 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
 
   for (G4int x = -8; x <= 8; x += 8) {
     for (G4int y = -14; y <= 14; y += 28) {
-      for (G4int z = 3; z <= 34; z += 2) {
-        xIndex = (x + 8) / 8;
-        yIndex = (y + 14) / 28;
-        zIndex = (z - 1) / 2;
+      for (G4int z = 5; z <= 34; z += 2) {
+        xIndex = (x + 8) / 4;
+        yIndex = (y + 14) / 8;
+        zIndex = (z + 1) / 2;
 
         // gap between to avoid intersection
-        xGap = xIndex * 0.0001 * mm;
-        yGap = yIndex * 0.0001 * mm;
-        zGap = zIndex * 0.0001 * mm;
+        xGap = xIndex * unitGap;
+        yGap = yIndex * unitGap;
+        zGap = zIndex * unitGap;
 
         // selecting wall orientation
         if (zIndex % 2 == 1) {
@@ -185,14 +188,14 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
           brick = brickX;
           brickName = "brickX";
         } else {
-          yPos = x * inch + xGap;
-          xPos = y * inch + yGap;
+          xPos = y * inch + xGap;
+          yPos = x * inch + yGap;
           brick = brickY;
           brickName = "brickX";
         }
 
-        name = brickName + "_" + std::to_string(xIndex) + "_" +
-               std::to_string(yIndex) + "_" + std::to_string(zIndex);
+        name = brickName + "_" + std::to_string(zIndex) + "_" +
+               std::to_string(yIndex) + "_" + std::to_string(xIndex);
 
         // making and placing
         brickLog = new G4LogicalVolume(brick, brickMat, name);
