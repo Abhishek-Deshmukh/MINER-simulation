@@ -24,37 +24,36 @@
 // ********************************************************************
 //
 //
-/// \file B1ActionInitialization.cc
-/// \brief Implementation of the B1ActionInitialization class
+/// \file EventAction.hh
+/// \brief Definition of the EventAction class
 
-#include "B1ActionInitialization.hh"
-#include "B1PrimaryGeneratorAction.hh"
-#include "B1RunAction.hh"
-#include "B1EventAction.hh"
-#include "B1SteppingAction.hh"
+#ifndef B1EventAction_h
+#define B1EventAction_h 1
 
-B1ActionInitialization::B1ActionInitialization()
- : G4VUserActionInitialization()
-{}
+#include "G4UserEventAction.hh"
+#include "globals.hh"
 
-B1ActionInitialization::~B1ActionInitialization()
-{}
+class RunAction;
 
-void B1ActionInitialization::BuildForMaster() const
+/// Event action class
+///
+
+class EventAction : public G4UserEventAction
 {
-  B1RunAction* runAction = new B1RunAction;
-  SetUserAction(runAction);
-}
+  public:
+    explicit EventAction(RunAction * runAction);
+    virtual ~EventAction();
 
-void B1ActionInitialization::Build() const
-{
-  SetUserAction(new B1PrimaryGeneratorAction);
+    virtual void BeginOfEventAction(const G4Event* event);
+    virtual void EndOfEventAction(const G4Event* event);
 
-  B1RunAction* runAction = new B1RunAction;
-  SetUserAction(runAction);
-  
-  B1EventAction* eventAction = new B1EventAction(runAction);
-  SetUserAction(eventAction);
-  
-  SetUserAction(new B1SteppingAction(eventAction));
-}  
+    void AddEdep(G4double edep) { fEdep += edep; }
+
+  private:
+    RunAction * fRunAction;
+    G4double     fEdep;
+};
+
+#endif
+
+    

@@ -24,28 +24,37 @@
 // ********************************************************************
 //
 //
-/// \file B1ActionInitialization.hh
-/// \brief Definition of the B1ActionInitialization class
+/// \file ActionInitialization.cc
+/// \brief Implementation of the ActionInitialization class
 
-#ifndef B1ActionInitialization_h
-#define B1ActionInitialization_h 1
+#include "ActionInitialization.hh"
+#include "EventAction.hh"
+#include "PrimaryGeneratorAction.hh"
+#include "RunAction.hh"
+#include "SteppingAction.hh"
 
-#include "G4VUserActionInitialization.hh"
+ActionInitialization::ActionInitialization()
+ : G4VUserActionInitialization()
+{}
 
-/// Action initialization class.
+ActionInitialization::~ActionInitialization()
+= default;
 
-class B1ActionInitialization : public G4VUserActionInitialization
+void ActionInitialization::BuildForMaster() const
 {
-  public:
-    B1ActionInitialization();
-    virtual ~B1ActionInitialization();
+  auto * runAction = new RunAction;
+  SetUserAction(runAction);
+}
 
-    virtual void BuildForMaster() const;
-    virtual void Build() const;
-};
+void ActionInitialization::Build() const
+{
+  SetUserAction(new PrimaryGeneratorAction());
 
+  auto * runAction = new RunAction;
+  SetUserAction(runAction);
 
-
-#endif
-
-    
+  auto * eventAction = new EventAction(runAction);
+  SetUserAction(eventAction);
+  
+  SetUserAction(new SteppingAction(eventAction));
+}  

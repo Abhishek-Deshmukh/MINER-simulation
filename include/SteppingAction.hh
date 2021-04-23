@@ -24,47 +24,34 @@
 // ********************************************************************
 //
 //
-/// \file B1SteppingAction.cc
-/// \brief Implementation of the B1SteppingAction class
+/// \file SteppingAction.hh
+/// \brief Definition of the SteppingAction class
 
-#include "B1SteppingAction.hh"
-#include "B1EventAction.hh"
-#include "B1DetectorConstruction.hh"
+#ifndef B1SteppingAction_h
+#define B1SteppingAction_h 1
 
-#include "G4Step.hh"
-#include "G4Event.hh"
-#include "G4RunManager.hh"
-#include "G4LogicalVolume.hh"
+#include "G4UserSteppingAction.hh"
+#include "globals.hh"
 
-B1SteppingAction::B1SteppingAction(B1EventAction* eventAction)
-: G4UserSteppingAction(),
-  fEventAction(eventAction),
-  fScoringVolume(nullptr)
-{}
+class EventAction;
 
-B1SteppingAction::~B1SteppingAction()
-= default;
+class G4LogicalVolume;
 
-void B1SteppingAction::UserSteppingAction(const G4Step* step)
+/// Stepping action class
+/// 
+
+class SteppingAction : public G4UserSteppingAction
 {
-  if (!fScoringVolume) { 
-    const B1DetectorConstruction* detectorConstruction
-      = static_cast<const B1DetectorConstruction*>
-        (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-    fScoringVolume = detectorConstruction->GetScoringVolume();   
-  }
+  public:
+    explicit SteppingAction(EventAction * eventAction);
+    virtual ~SteppingAction();
 
-  // get volume of the current step
-  G4LogicalVolume* volume 
-    = step->GetPreStepPoint()->GetTouchableHandle()
-      ->GetVolume()->GetLogicalVolume();
-      
-  // check if we are in scoring volume
-  if (volume != fScoringVolume) return;
+    // method from the base class
+    virtual void UserSteppingAction(const G4Step*);
 
-  // collect energy deposited in this step
-  // TODO: store here
-  G4double edepStep = step->GetTotalEnergyDeposit();
-  fEventAction->AddEdep(edepStep);  
-}
+  private:
+    EventAction *  fEventAction;
+    G4LogicalVolume* fScoringVolume;
+};
 
+#endif

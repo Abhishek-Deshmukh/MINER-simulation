@@ -24,32 +24,42 @@
 // ********************************************************************
 //
 //
-/// \file B1EventAction.cc
-/// \brief Implementation of the B1EventAction class
+/// \file RunAction.hh
+/// \brief Definition of the RunAction class
 
-#include "B1EventAction.hh"
-#include "B1RunAction.hh"
+#ifndef B1RunAction_h
+#define B1RunAction_h 1
 
-#include "G4Event.hh"
-#include "G4RunManager.hh"
+#include "G4UserRunAction.hh"
+#include "G4Accumulable.hh"
+#include "globals.hh"
+#include "Analyser.hh"
 
-B1EventAction::B1EventAction(B1RunAction* runAction)
-: G4UserEventAction(),
-  fRunAction(runAction),
-  fEdep(0.)
-{} 
+class G4Run;
 
-B1EventAction::~B1EventAction()
-= default;
+/// Run action class
+///
+/// In EndOfRunAction(), it calculates the dose in the selected volume 
+/// from the energy deposit accumulated via stepping and event actions.
+/// The computed dose is then printed on the screen.
 
-void B1EventAction::BeginOfEventAction(const G4Event*)
-{    
-  fEdep = 0.;
-}
+class RunAction : public G4UserRunAction
+{
+  public:
+    RunAction();
+    virtual ~RunAction();
 
-void B1EventAction::EndOfEventAction(const G4Event*)
-{   
-  // accumulate statistics in run action
-  fRunAction->AddEdep(fEdep);
-  // TODO: accumulate stats here
-}
+    // virtual G4Run* GenerateRun();
+    virtual void BeginOfRunAction(const G4Run*);
+    virtual void   EndOfRunAction(const G4Run*);
+
+    void AddEdep (G4double edep); 
+
+  private:
+    G4Accumulable<G4double> fEdep;
+    G4Accumulable<G4double> fEdep2;
+    Analyser *analyser;
+};
+
+#endif
+

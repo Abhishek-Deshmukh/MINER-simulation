@@ -24,10 +24,10 @@
 // ********************************************************************
 //
 //
-/// \file B1DetectorConstruction.cc
-/// \brief Implementation of the B1DetectorConstruction class
+/// \file DetectorConstruction.cc
+/// \brief Implementation of the DetectorConstruction class
 
-#include "B1DetectorConstruction.hh"
+#include "DetectorConstruction.hh"
 
 #include "G4Box.hh"
 #include "G4Color.hh"
@@ -43,22 +43,25 @@
 #include "G4Tubs.hh"
 #include "G4VisAttributes.hh"
 
-B1DetectorConstruction::B1DetectorConstruction()
+DetectorConstruction::DetectorConstruction()
     : G4VUserDetectorConstruction(), fScoringVolume(nullptr) {}
 
-B1DetectorConstruction::~B1DetectorConstruction() = default;
+DetectorConstruction::~DetectorConstruction() = default;
 
-G4VPhysicalVolume *B1DetectorConstruction::Construct() {
+G4VPhysicalVolume *DetectorConstruction::Construct() {
   // Get nist material manager
   G4NistManager *nist = G4NistManager::Instance();
 
   // Extra units
   G4double inch = 2.54 * cm;
-  G4double unitGap = 0.0001*mm; // 0.1 micrometer
+  G4double unitGap = 0.0001 * mm; // 0.1 micrometer
 
   // Option to switch on/off checking of volumes overlaps
   //
   G4bool checkOverlaps = true;
+
+  // Other options
+  G4bool buildBricks = true;
 
   //
   // World
@@ -84,6 +87,8 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
                         false,                  // no boolean operation
                         0,                      // copy number
                         checkOverlaps);         // overlaps checking
+
+  if (buildBricks) {
 
   //
   // Building the lead fridge
@@ -133,6 +138,7 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
   G4String name, brickName;
   G4LogicalVolume *brickLog;
 
+  // the brick lines which go from end to end
   for (G4int x = -14; x <= 14; x += 28) {
     for (G4int y = -12; y <= 12; y += 8) {
       for (G4int z = 5; z <= 34; z += 2) {
@@ -169,6 +175,7 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
     }
   }
 
+  // the brick lines which don't go from end to end
   for (G4int x = -8; x <= 8; x += 8) {
     for (G4int y = -14; y <= 14; y += 28) {
       for (G4int z = 5; z <= 34; z += 2) {
@@ -204,11 +211,26 @@ G4VPhysicalVolume *B1DetectorConstruction::Construct() {
       }
     }
   }
+  }
+#pragma clang diagnostic pop
+
+  //
+  // Putting in a detector
+  //
+  G4double detectorXY = 16 * inch;
+  G4double detectorZ = 0.5 * inch;
+  auto detectorMat = nist->FindOrBuildMaterial("G4_Si");
+  auto *detector =
+      new G4Box("detector", detectorXY / 2, detectorXY / 2, detectorZ / 2);
+  auto *detectorLog = new G4LogicalVolume(detector, detectorMat, "detector");
+  new G4PVPlacement(nullptr, G4ThreeVector(0, 0, 4.25 * inch + 3 * unitGap),
+                    detectorLog, "detector", logicWorld, false, 0,
+                    checkOverlaps);
 
   //
   // Set detector as scoring volume
   //
-  //  fScoringVolume = brick_log;
+  fScoringVolume = detectorLog;
 
   //
   // always return the physical World

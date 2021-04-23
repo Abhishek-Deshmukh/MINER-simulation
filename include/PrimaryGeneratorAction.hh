@@ -24,17 +24,18 @@
 // ********************************************************************
 //
 //
-/// \file B1PrimaryGeneratorAction.hh
-/// \brief Definition of the B1PrimaryGeneratorAction class
+/// \file PrimaryGeneratorAction.hh
+/// \brief Definition of the PrimaryGeneratorAction class
 
-#ifndef B1PrimaryGeneratorAction_h
-#define B1PrimaryGeneratorAction_h 1
+#ifndef PrimaryGeneratorAction_h
+#define PrimaryGeneratorAction_h 1
 
-#include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4ParticleGun.hh"
+#include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
 #include "vector"
-
+#include <G4ParticleTable.hh>
+#include "Analyser.hh"
 
 class G4ParticleGun;
 class G4Event;
@@ -47,19 +48,22 @@ class CRYParticle;
 /// The default kinematic is a 6 MeV gamma, randomly distribued 
 /// in front of the phantom across 80% of the (X,Y) phantom size.
 
-class B1PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
+class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
   public:
-    B1PrimaryGeneratorAction();    
-    virtual ~B1PrimaryGeneratorAction();
+    PrimaryGeneratorAction();
+    virtual ~PrimaryGeneratorAction();
     virtual void GeneratePrimaries(G4Event*);
     const G4ParticleGun* GetParticleGun() const { return fParticleGun; }
   
   private:
     G4ParticleGun*  fParticleGun; // pointer a to G4 gun class
-    G4Box* fEnvelopeBox;
-    std::vector<CRYParticle*> *particlesVectors{}; // vector of generated particles
-    CRYGenerator* particleGenerator{};
+    std::vector<CRYParticle*> *particlesVector; // vector of generated particles
+    CRYGenerator* particleGenerator;
+    G4bool successfulCRYLoad;
+    G4ParticleTable* particleTable;
+    Analyser *analyser;
+    G4double inch = 2.54*cm;
 };
 
 #endif

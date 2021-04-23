@@ -2,19 +2,19 @@
 // Created by deshmukh on 05/04/21.
 //
 
-#include "B1Analyser.hh"
+#include "Analyser.hh"
 #include <fstream>
 #include <iostream>
 
 // So only one instance of the analyser exists at a moment
-B1Analyser *B1Analyser::instance = nullptr;
-B1Analyser *B1Analyser::getInstance() {
+Analyser *Analyser::instance = nullptr;
+Analyser *Analyser::getInstance() {
   if (instance == nullptr)
-    instance = new B1Analyser;
+    instance = new Analyser;
   return instance;
 }
 
-B1Analyser::B1Analyser() {
+Analyser::Analyser() {
   pionZeroCount = 0;
   pionZeroEnergy = 0.0;
   pionPlusCount = 0;
@@ -42,13 +42,17 @@ B1Analyser::B1Analyser() {
   // gamma
   gammaCount = 0;
   gammaEnergy = 0.0;
+
+  // opening the file to store the edeps
+  energyOutFile.open("Energy.txt", std::ios_base::out);
 }
 
-void B1Analyser::recordEvent(const G4String &particleName, G4double energy) {
+void Analyser::recordEvent(const G4String &particleName, G4double energy,
+                           const CLHEP::Hep3Vector& vector) {
   // TODO: find out which particle and then increment the corresponding particle
 }
 
-void B1Analyser::save() {
+void Analyser::save() const {
   G4String fileName("CRY_output.csv");
   std::fstream fileout;
   fileout.open(fileName, std::ios_base::out);
@@ -89,4 +93,12 @@ void B1Analyser::save() {
     fileout << "Gamma,,γ," << gammaCount << "," << gammaEnergy << G4endl;
   }
 }
-B1Analyser::~B1Analyser() = default;
+void Analyser::appendEdep(G4double edep) {
+
+  if (!energyOutFile.is_open()) {
+    G4cout << "Energy output file is not open" << G4endl;
+  } else {
+    energyOutFile << edep << ",";
+  }
+}
+Analyser::~Analyser() = default;

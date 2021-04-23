@@ -24,36 +24,33 @@
 // ********************************************************************
 //
 //
-/// \file B1EventAction.hh
-/// \brief Definition of the B1EventAction class
+/// \file DetectorConstruction.hh
+/// \brief Definition of the DetectorConstruction class
 
-#ifndef B1EventAction_h
-#define B1EventAction_h 1
+#ifndef B1DetectorConstruction_h
+#define B1DetectorConstruction_h 1
 
-#include "G4UserEventAction.hh"
+#include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
 
-class B1RunAction;
+class G4VPhysicalVolume;
+class G4LogicalVolume;
 
-/// Event action class
-///
+/// Detector construction class to define materials and geometry.
 
-class B1EventAction : public G4UserEventAction
+class DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
-    explicit B1EventAction(B1RunAction* runAction);
-    virtual ~B1EventAction();
+    DetectorConstruction();
+    virtual ~DetectorConstruction();
 
-    virtual void BeginOfEventAction(const G4Event* event);
-    virtual void EndOfEventAction(const G4Event* event);
+    virtual G4VPhysicalVolume* Construct();
+    
+    G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
 
-    void AddEdep(G4double edep) { fEdep += edep; }
-
-  private:
-    B1RunAction* fRunAction;
-    G4double     fEdep;
+  protected:
+    G4LogicalVolume*  fScoringVolume;
 };
 
 #endif
 
-    

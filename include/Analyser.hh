@@ -5,18 +5,27 @@
 #ifndef B1_CRY_TEST_B1ANALYSER_H
 #define B1_CRY_TEST_B1ANALYSER_H
 
-#include "globals.hh"
 #include "G4SystemOfUnits.hh"
+#include "globals.hh"
+#include <CLHEP/Vector/ThreeVector.h>
+#include <fstream>
 
-class B1Analyser {
+class Analyser {
 public:
-  B1Analyser();
-  void save();
-  void recordEvent(const G4String& particleName, G4double energy);
-  static B1Analyser* getInstance();
-  ~B1Analyser();
+  Analyser();
+  void save() const;
+  void recordEvent(const G4String &particleName, G4double energy,
+                   const CLHEP::Hep3Vector& vector);
+  static Analyser * getInstance();
+  ~Analyser();
+  void appendEdep(G4double d);
+
 private:
-  static B1Analyser* instance;
+  static Analyser * instance;
+  //
+  // Inputs
+  //
+
   // shape template
   // G4int particleChargeCount; total number of particle of Charge
   // G4double particleChargeEnergy; total energy deposited by the particles
@@ -48,6 +57,11 @@ private:
   // gamma
   G4int gammaCount;
   G4double gammaEnergy;
+
+  //
+  // Outputs
+  //
+  std::fstream energyOutFile;
 };
 
 #endif // B1_CRY_TEST_B1ANALYSER_H
