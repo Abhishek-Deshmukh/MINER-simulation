@@ -86,6 +86,8 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction() {
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
   // this function is called at the beginning of each event
   //
+
+  G4cout << "Event id: " << anEvent->GetEventID() << G4endl;
   if (!successfulCRYLoad) {
     auto *str = new G4String("CRY file was not loaded successfully");
     G4Exception("PrimaryGeneratorAction::GeneratePrimaries", "1",
