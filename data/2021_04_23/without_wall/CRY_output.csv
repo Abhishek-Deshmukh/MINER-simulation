@@ -1,0 +1,12 @@
+Particle,Charge,Symbol,Count,Energy
+Pion,+,π^+,31,434622
+Pion,,π^0,0,0
+Pion,-,π^-,38,213872
+Neutron,,n,59609,9.23604e+06
+Electron,+,e^+,37669,4.86368e+06
+Electron,-,e^-,62859,5.25318e+06
+Muon,+,μ^+,205883,1.24281e+09
+Muon,-,μ^-,191257,1.24194e+09
+Proton,+,p^+,4775,3.3334e+06
+Proton,-,p^-,5,11383
+Gamma,,γ,551740,1.72693e+07
