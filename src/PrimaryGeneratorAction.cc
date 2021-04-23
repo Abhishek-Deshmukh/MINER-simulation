@@ -116,9 +116,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
     fParticleGun->GeneratePrimaryVertex(anEvent);
 
     particleName = CRYUtils::partName(particle->id());
-    analyser->recordEvent(particleName, particleEnergy,
-                          particleMomentumDirection);
+    analyser->recordEvent(particleName, particleEnergy, particle->charge(), particle->t());
+    // G4cout << "================================================================" << G4endl;
     // G4cout << "particleName: " << particleName << G4endl;
+    // G4cout << "================================================================" << G4endl;
     delete (particle);
   }
 }

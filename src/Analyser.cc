@@ -45,11 +45,69 @@ Analyser::Analyser() {
 
   // opening the file to store the edeps
   energyOutFile.open("Energy.txt", std::ios_base::out);
+  inFile.open("EnergyIn.csv", std::ios_base::out);
+  inFile << "Particle,Charge,energy,time" << std::endl;
 }
 
-void Analyser::recordEvent(const G4String &particleName, G4double energy,
-                           const CLHEP::Hep3Vector& vector) {
-  // TODO: find out which particle and then increment the corresponding particle
+void Analyser::recordEvent(const G4String &particleName, G4double energy, G4double charge, G4double time) {
+  inFile << particleName << "," << charge << "," << energy << "," << time << std::endl;
+
+  if (particleName == "gamma") {
+    gammaCount += 1;
+    gammaEnergy += energy;
+  } else if (particleName == "muon") {
+    if (charge == 1) {
+      muonPlusCount += 1;
+      muonPlusEnergy += energy;
+    } else if (charge == -1) {
+      muonMinusCount += 1;
+      muonMinusEnergy += energy;
+    } else {
+      G4cout << "Analyser:64: Particle not known" << G4endl;
+    }
+  } else if (particleName == "pion") {
+    if (charge == 1) {
+      pionPlusCount += 1;
+      pionPlusEnergy += energy;
+    } else if (charge == -1) {
+      pionMinusCount += 1;
+      pionMinusEnergy += energy;
+    } else if (charge == 0) {
+      pionZeroCount += 1;
+      pionZeroEnergy += energy;
+    } else {
+      G4cout << "Analyser:77: Particle not known" << G4endl;
+    }
+  } else if (particleName == "neutron") {
+    if (charge == 0) {
+      neutronCount += 1;
+      neutronEnergy += energy;
+    } else {
+      G4cout << "Analyser:84: Particle not known" << G4endl;
+    }
+  } else if (particleName == "electron") {
+    if (charge == 1) {
+      electronPlusCount += 1;
+      electronPlusEnergy += energy;
+    } else if (charge == -1)  {
+      electronMinusCount += 1;
+      electronMinusEnergy += energy;
+    } else {
+      G4cout << "Analyser:94: Particle not known" << G4endl;
+    }
+  } else if (particleName == "proton") {
+    if (charge == 1) {
+      protonPlusCount += 1;
+      protonPlusEnergy += energy;
+    } else if (charge == -1) {
+      protonMinusCount += 1;
+      protonMinusEnergy += energy;
+    } else {
+      G4cout << "Analyser:104: Particle not known" << G4endl;
+    }
+  } else {
+    G4cout << "Analyser:107: Particle not known" << G4endl;
+  }
 }
 
 void Analyser::save() const {

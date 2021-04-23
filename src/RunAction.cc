@@ -58,7 +58,7 @@ RunAction::RunAction()
   new G4UnitDefinition("nanogray" , "nanoGy"  , "Dose", nanogray);
   new G4UnitDefinition("picogray" , "picoGy"  , "Dose", picogray); 
 
-  analyser = Analyser::getInstance(); // make this a class attribute
+  analyser = Analyser::getInstance();
 }
 
 RunAction::~RunAction()

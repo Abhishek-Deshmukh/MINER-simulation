@@ -14,11 +14,10 @@ class Analyser {
 public:
   Analyser();
   void save() const;
-  void recordEvent(const G4String &particleName, G4double energy,
-                   const CLHEP::Hep3Vector& vector);
+  void recordEvent(const G4String &particleName, G4double energy, G4double charge, G4double time);
   static Analyser * getInstance();
   ~Analyser();
-  void appendEdep(G4double d);
+  void appendEdep(G4double edep);
 
 private:
   static Analyser * instance;
@@ -62,6 +61,7 @@ private:
   // Outputs
   //
   std::fstream energyOutFile;
+  std::fstream inFile;
 };
 
 #endif // B1_CRY_TEST_B1ANALYSER_H
