@@ -68,7 +68,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 
   // CRY Setup
   auto *setup =
-      new CRYSetup(setupString, "/home/mercury/Downloads/CRY/cry_v1.7/data");
+      new CRYSetup(setupString, "/home/mercury/downloads/CRY/cry_v1.7/data");
   particleGenerator = new CRYGenerator(setup);
   particlesVector = new std::vector<CRYParticle *>;
   particleTable = G4ParticleTable::GetParticleTable();

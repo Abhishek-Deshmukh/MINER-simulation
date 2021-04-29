@@ -1,0 +1,78 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MINER" type="CMakeRunConfiguration" factoryName="Application" singleton="false" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" RUN_PATH="MINER-simulation">
+    <envs>
+      <env name="CLHEP_BASE_DIR" value="$USER_HOME$/.local/CLHEP" />
+      <env name="CLHEP_INCLUDE_DIR" value="$USER_HOME$/.local/CLHEP/include" />
+      <env name="CLHEP_LIB_DIR" value="$USER_HOME$/.local/CLHEP/lib" />
+      <env name="CLING_STANDARD_PCH" value="none" />
+      <env name="CMAKE_PREFIX_PATH" value="/usr/local" />
+      <env name="DBUS_SESSION_BUS_ADDRESS" value="unix:path\=/run/user/1000/bus" />
+      <env name="DISPLAY" value=":0" />
+      <env name="DYLD_LIBRARY_PATH" value="/usr/local/lib" />
+      <env name="G4ABLADATA" value="$USER_HOME$/.local/GEANT4/share/Geant4-10.7.1/data/G4ABLA3.1" />
+      <env name="G4ENSDFSTATEDATA" value="$USER_HOME$/.local/GEANT4/share/Geant4-10.7.1/data/G4ENSDFSTATE2.3" />
+      <env name="G4INCLDATA" value="$USER_HOME$/.local/GEANT4/share/Geant4-10.7.1/data/G4INCL1.0" />
+      <env name="G4INCLUDE" value="$USER_HOME$/.local/GEANT4/include/Geant4" />
+      <env name="G4INSTALL" value="$USER_HOME$/.local/GEANT4/share/Geant4-10.7.1/geant4make" />
+      <env name="G4LEDATA" value="$USER_HOME$/.local/GEANT4/share/Geant4-10.7.1/data/G4EMLOW7.13" />
+      <env name="G4LEVELGAMMADATA" value="$USER_HOME$/.local/GEANT4/share/Geant4-10.7.1/data/PhotonEvaporation5.7" />
+      <env name="G4LIB" value="$USER_HOME$/.local/GEANT4/lib/Geant4-10.7.1" />
+      <env name="G4LIB_BUILD_SHARED" value="1" />
+      <env name="G4LIB_USE_GDML" value="1" />
+      <env name="G4LIB_USE_ZLIB" value="1" />
+      <env name="G4NEUTRONHPDATA" value="$USER_HOME$/.local/GEANT4/share/Geant4-10.7.1/data/G4NDL4.6" />
+      <env name="G4PARTICLEXSDATA" value="$USER_HOME$/.local/GEANT4/share/Geant4-10.7.1/data/G4PARTICLEXS3.1.1" />
+      <env name="G4PIIDATA" value="$USER_HOME$/.local/GEANT4/share/Geant4-10.7.1/data/G4PII1.3" />
+      <env name="G4RADIOACTIVEDATA" value="$USER_HOME$/.local/GEANT4/share/Geant4-10.7.1/data/RadioactiveDecay5.6" />
+      <env name="G4REALSURFACEDATA" value="$USER_HOME$/.local/GEANT4/share/Geant4-10.7.1/data/RealSurface2.2" />
+      <env name="G4SAIDXSDATA" value="$USER_HOME$/.local/GEANT4/share/Geant4-10.7.1/data/G4SAIDDATA2.0" />
+      <env name="G4SYSTEM" value="Linux-g++" />
+      <env name="G4UI_USE_QT" value="1" />
+      <env name="G4UI_USE_TCSH" value="1" />
+      <env name="G4VIS_USE_OPENGLQT" value="1" />
+      <env name="G4VIS_USE_OPENGLX" value="1" />
+      <env name="G4VIS_USE_RAYTRACERX" value="1" />
+      <env name="G4WORKDIR" value="$USER_HOME$/geant4_workdir" />
+      <env name="HOME" value="$USER_HOME$" />
+      <env name="INVOCATION_ID" value="ff637b0ed0d84e7eb7506c5daffe9b01" />
+      <env name="JOURNAL_STREAM" value="8:16739" />
+      <env name="JUPYTER_CONFIG_DIR" value="/usr/local/etc/notebook" />
+      <env name="JUPYTER_PATH" value="/usr/local/etc/notebook" />
+      <env name="LANG" value="C" />
+      <env name="LD_LIBRARY_PATH" value="/usr/lib:$USER_HOME$/.local/CLHEP/lib:$USER_HOME$/.local/GEANT4/lib:$USER_HOME$/.local/GEANT4/lib:/usr/local/lib:$USER_HOME$/.local/CLHEP/lib:$USER_HOME$/.local/xerces-c-3.2.3/lib" />
+      <env name="LIBPATH" value="/usr/local/lib" />
+      <env name="LOGNAME" value="mercury" />
+      <env name="MAIL" value="/var/spool/mail/mercury" />
+      <env name="MANPATH" value="/usr/local/man:/usr/local/man:/usr/local/share/man:/usr/share/man" />
+      <env name="MOTD_SHOWN" value="pam" />
+      <env name="PATH" value="$USER_HOME$/geant4_workdir/bin/Linux-g++:$USER_HOME$/.local/GEANT4/bin:$USER_HOME$/.local/GEANT4/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl" />
+      <env name="PWD" value="$USER_HOME$" />
+      <env name="PYTHONPATH" value="/usr/local/lib" />
+      <env name="QTHOME" value="/usr" />
+      <env name="QTLIBPATH" value="/usr/lib" />
+      <env name="ROOTSYS" value="/usr/local" />
+      <env name="SHELL" value="/bin/bash" />
+      <env name="SHLIB_PATH" value="/usr/local/lib" />
+      <env name="SHLVL" value="5" />
+      <env name="STARSHIP_SESSION_KEY" value="2822329442112166" />
+      <env name="STARSHIP_SHELL" value="bash" />
+      <env name="SYSTEMD_EXEC_PID" value="394" />
+      <env name="TERM" value="linux" />
+      <env name="USER" value="mercury" />
+      <env name="WINDOWPATH" value="1" />
+      <env name="XAUTHORITY" value="$USER_HOME$/.Xauthority" />
+      <env name="XDG_RUNTIME_DIR" value="/run/user/1000" />
+      <env name="XDG_SEAT" value="seat0" />
+      <env name="XDG_SESSION_CLASS" value="user" />
+      <env name="XDG_SESSION_ID" value="1" />
+      <env name="XDG_SESSION_TYPE" value="tty" />
+      <env name="XDG_VTNR" value="1" />
+      <env name="XERCESCROOT" value="$USER_HOME$/.local/xerces-c-3.2.3" />
+      <env name="_" value="$APPLICATION_HOME_DIR$/jbr/bin/java" />
+      <env name="_JAVA_AWT_WM_NONREPARENTING" value="1" />
+    </envs>
+    <method v="2">
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>

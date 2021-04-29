@@ -45,9 +45,9 @@ target_link_libraries(root_lib INTERFACE ${ROOT_LIBRARIES})
 #----------------------------------------------------------------------------
 # Find CRY
 add_library(CRY INTERFACE)
-target_include_directories(CRY INTERFACE /home/mercury/Downloads/CRY/cry_v1.7/src)
+target_include_directories(CRY INTERFACE /home/mercury/downloads/CRY/cry_v1.7/src)
 target_compile_options(CRY INTERFACE "-no-pie")
-set(EXTRA_LIBS ${EXTRA_LIBS} -fPIC -L/home/mercury/Downloads/CRY/cry_v1.7/lib -lCRY)
+set(EXTRA_LIBS ${EXTRA_LIBS} -fPIC -L/home/mercury/downloads/CRY/cry_v1.7/lib -lCRY)
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
@@ -56,7 +56,7 @@ set(EXTRA_LIBS ${EXTRA_LIBS} -fPIC -L/home/mercury/Downloads/CRY/cry_v1.7/lib -l
 include_directories(${PROJECT_SOURCE_DIR}/include
         ${Geant4_INCLUDE_DIR}
         ${ROOT_INCLUDE_DIRS})
-file(GLOB cry_sources /home/mercury/Downloads/CRY/cry_v1.7/src/*.*)
+file(GLOB cry_sources /home/mercury/downloads/CRY/cry_v1.7/src/*.*)
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
