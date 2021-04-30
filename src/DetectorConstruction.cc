@@ -66,7 +66,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
   //
   // World
   //
-  G4double worldSizeXY = 10 * m + 2 * unitGap; // the last 1 mm to avoid overlap issue
+  G4double worldSizeXY = 30 * m + 2 * unitGap; // the last 1 mm to avoid overlap issue
   G4double worldSizeZ = 3 * m;
   G4Material *worldMat = nist->FindOrBuildMaterial("G4_AIR");
 
@@ -212,7 +212,6 @@ G4VPhysicalVolume *DetectorConstruction::Construct() {
     }
   }
   }
-#pragma clang diagnostic pop
 
   //
   // Putting in a detector
